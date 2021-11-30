@@ -51,11 +51,11 @@ export default ({ employee }) => {
                     employeeId
                         ? <>
                             <section>
-                            Caring for {resource.animals?.length} animals
+                            Caring for {resource.animals?.length || 0} animals
                             </section>
                             <section>
                             Working at {resource.locations?.map((each)=>{
-                                return <div>{each.location.name}</div>
+                                return <div key={each.location.id}> {each.location.name}</div>
                             })}
                             </section>
                         </>

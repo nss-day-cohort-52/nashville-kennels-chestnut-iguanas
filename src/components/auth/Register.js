@@ -8,7 +8,8 @@ export const Register = () => {
         firstName: "",
         lastName: "",
         email: "",
-        employee: false
+        employee: false,
+        locationId: 0
     })
     const { register } = useSimpleAuth()
     const history = useHistory()
@@ -19,7 +20,8 @@ export const Register = () => {
         const newUser = {
             name: `${credentials.firstName} ${credentials.lastName}`,
             email: credentials.email,
-            employee: credentials.employee
+            employee: credentials.employee,
+            locationId: 0
         }
 
         register(newUser).then(() => {
