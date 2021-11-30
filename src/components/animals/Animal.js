@@ -35,7 +35,7 @@ export const Animal = ({ animal, syncAnimals,
             .getOwnersByAnimal(currentAnimal.id)
             .then(people => setPeople(people))
     }
-
+    
     useEffect(() => {
         getPeople()
     }, [currentAnimal])
@@ -84,23 +84,25 @@ export const Animal = ({ animal, syncAnimals,
                         <section>
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                                Unknown
+                            {currentAnimal.animalCaretakers?.map(u=>u.user.name).join(" & ")}
+                            
                             </span>
 
-
+                        
                             <h6>Owners</h6>
                             <span className="small">
-                                Owned by unknown
+                            {myOwners.map(u=>u.user.name).join(" & ")}
                             </span>
-
-                            {
+                            
+                            
+                            { 
                                 myOwners.length < 2
                                     ? <select defaultValue=""
                                         name="owner"
                                         className="form-control small"
                                         onChange={() => {}} >
                                         <option value="">
-                                            Select {myOwners.length === 1 ? "another" : "an"} owner
+                                            Select {currentAnimal.animalOwners?.length === 1 ? "another" : "an"} owner
                                         </option>
                                         {
                                             allOwners.map(o => <option key={o.id} value={o.id}>{o.name}</option>)
