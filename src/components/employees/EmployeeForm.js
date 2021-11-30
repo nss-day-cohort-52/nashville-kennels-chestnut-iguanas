@@ -1,27 +1,46 @@
 import React, { useState } from "react"
 import EmployeeRepository from "../../repositories/EmployeeRepository";
 import "./EmployeeForm.css"
+import LocationRepository from "../../repositories/LocationRepository"
+import {useEffect} from "react"
+import { useHistory } from "react-router-dom"
+
+
 
 
 export default (props) => {
-    const [employee, updateEmployee] = useState()
+    const [employee, updateEmployee] = useState({})
     const [locations, defineLocations] = useState([])
 
+
+    useEffect(() => {
+        LocationRepository.getAll()
+        .then((res)=>{
+            defineLocations(res)
+        })
+    }, [])
+
+    
+    
+    const history = useHistory()
+    
     const constructNewEmployee = () => {
         if (employee.locationId === 0) {
             window.alert("Please select a location")
         } else {
             EmployeeRepository.addEmployee({
                 name: employee.name,
-                employee: true
+                employee: true,
+                email: employee.email
             })
-            .then(employee => {
+            .then(data => {
+                debugger
                 EmployeeRepository.assignEmployee({
-                    employeeId: employee.id,
-                    locationId: employee.location
+                    userId: data.id,
+                    locationId: parseInt(employee.locationId)
                 })
             })
-            .then(() => props.history.push("/employees"))
+            .then(() => history.push("/employees"))
         }
     }
 
@@ -38,7 +57,7 @@ export default (props) => {
                 <h2 className="employeeForm__title">New Employee</h2>
                 <div className="form-group">
                     <label htmlFor="employeeName">Employee name</label>
-                    <input onChange={handleUserInput}
+                    <input id="name" onChange={handleUserInput}
                         type="text"
                         required
                         autoFocus
@@ -46,14 +65,32 @@ export default (props) => {
                         placeholder="Employee name"
                     />
                 </div>
+
+
+
+                
                 <div className="form-group">
+                    <label htmlFor="email">Employee Email</label>
+                    <input id="email" onChange={handleUserInput}
+                        type="text"
+                        required
+                        autoFocus
+                        className="form-control"
+                        placeholder="Employee name"
+                    />
+                </div>
+
+
+
+
+                <div className="form-group" >
                     <label htmlFor="location">Assign to location</label>
-                    <select onChange={handleUserInput}
+                    <select id="locationId" onChange={handleUserInput}
                         defaultValue=""
                         name="location"
                         className="form-control"
                     >
-                        <option value="0">Select a location</option>
+                        <option key="location--0" value="0">Select a location</option>
                         {locations.map(e => (
                             <option key={e.id} value={e.id}>
                                 {e.name}
