@@ -2,6 +2,7 @@ import React from "react"
 import { Link } from "react-router-dom"
 import locationImage from "./location.png"
 import "./Location.css"
+import { AnimalListComponent } from "../animals/AnimalList"
 
 
 export default ({location}) => {
@@ -18,13 +19,19 @@ export default ({location}) => {
                         {location.name}
                     </Link>
                 </h5>
+
+
             </section>
             <section>
-                Total animals
+                Total animals: {location?.animals.length}
             </section>
             <section>
-                Total locations
+                Total Employees: {location?.employeeLocations.length}
             </section>
+            
         </article>
     )
 }
+
+
+
