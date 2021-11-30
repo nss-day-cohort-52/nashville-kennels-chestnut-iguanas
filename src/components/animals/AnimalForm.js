@@ -1,7 +1,7 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import "./AnimalForm.css"
 import AnimalRepository from "../../repositories/AnimalRepository";
-
+import EmployeeRepository from "../../repositories/EmployeeRepository";
 
 export default (props) => {
     const [animalName, setName] = useState("")
@@ -10,6 +10,15 @@ export default (props) => {
     const [employees, setEmployees] = useState([])
     const [employeeId, setEmployeeId] = useState(0)
     const [saveEnabled, setEnabled] = useState(false)
+    const [animallocation, setlocation] = useState("")
+
+    useEffect(() => {
+        EmployeeRepository.getAll()
+            .then((res) => {
+                setEmployees(res)
+            })
+    }, [])
+
 
     const constructNewAnimal = evt => {
         evt.preventDefault()
@@ -23,7 +32,7 @@ export default (props) => {
                 name: animalName,
                 breed: breed,
                 employeeId: eId,
-                locationId: parseInt(emp.locationId)
+                locationId: parseInt(animallocation)
             }
 
             AnimalRepository.addAnimal(animal)
@@ -31,6 +40,17 @@ export default (props) => {
                 .then(() => props.history.push("/animals"))
         }
     }
+
+    const chosenemployee = () => {
+        const employeechosen = employees.filter(e => {
+            return e.id === parseInt(employeeId)
+        })
+
+        const locationarray = employeechosen[0].employeeLocations
+        return locationarray
+    }
+
+
 
     return (
         <form className="animalForm">
@@ -69,12 +89,34 @@ export default (props) => {
                 >
                     <option value="">Select an employee</option>
                     {employees.map(e => (
-                        <option key={e.id} id={e.id} value={e.id}>
-                            {e.name}
-                        </option>
+                        e.employee ?
+                            <option key={e.id} id={e.id} value={e.id}>
+                                {e.name}
+                            </option> :
+                            ""
                     ))}
+
                 </select>
             </div>
+            {employeeId ?
+                <div className="form-group">
+                    <label htmlFor="employee">Choose a location </label>
+                    <select
+                        defaultValue=""
+                        name="employee"
+                        id="employeeId"
+                        className="form-control"
+                        onChange={e => setlocation(e.target.id)}
+                    >
+                        <option value="">Select a location</option>
+                        {
+                            chosenemployee().map((locate) => {
+                                return <option key={locate.id} id={locate.id} value={locate.locationId}>{locate.locationId === 1? "Nashville North": "Nashville South"} </option>
+                            })
+                        }
+                    </select>
+                </div> : ""}
+
             <button type="submit"
                 onClick={constructNewAnimal}
                 disabled={saveEnabled}
