@@ -42,6 +42,7 @@ export default ({ employee }) => {
                                     state: { employee: resource }
                                 }}>
                                 {resource.name}
+                                
                             </Link>
 
                     }
@@ -50,10 +51,12 @@ export default ({ employee }) => {
                     employeeId
                         ? <>
                             <section>
-                                Caring for 0 animals
+                            Caring for {resource.animals?.length} animals
                             </section>
                             <section>
-                                Working at unknown location
+                            Working at {resource.locations?.map((each)=>{
+                                return <div>{each.location.name}</div>
+                            })}
                             </section>
                         </>
                         : ""

@@ -8,10 +8,10 @@ export const LocationList = () => {
     const [ locations, updateLocations ] = useState([])
 
     useEffect(() => {
-       LocationRepository.getAll()
-       .then((res)=>{
-           updateLocations(res)
-       })
+        LocationRepository.getAll()
+        .then((res)=>{
+            updateLocations(res)
+        })
     }, [])
 
     return (
