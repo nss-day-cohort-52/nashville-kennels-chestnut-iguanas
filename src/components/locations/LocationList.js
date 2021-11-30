@@ -9,6 +9,9 @@ export const LocationList = () => {
 
     useEffect(() => {
         LocationRepository.getAll()
+        .then((res)=>{
+            updateLocations(res)
+        })
     }, [])
 
     return (
