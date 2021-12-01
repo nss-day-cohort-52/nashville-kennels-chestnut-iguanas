@@ -35,7 +35,7 @@ export const Animal = ({ animal, syncAnimals,
             .getOwnersByAnimal(currentAnimal.id)
             .then(people => setPeople(people))
     }
-    
+
     useEffect(() => {
         getPeople()
     }, [currentAnimal])
@@ -84,23 +84,23 @@ export const Animal = ({ animal, syncAnimals,
                         <section>
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                            {currentAnimal.animalCaretakers?.map(u=>u.user.name).join(" & ")}
-                            
+                                {currentAnimal.animalCaretakers?.map(u => u.user.name).join(" & ")}
+
                             </span>
 
-                        
+
                             <h6>Owners</h6>
                             <span className="small">
-                            {myOwners.map(u=>u.user.name).join(" & ")}
+                                {myOwners.map(u => u.user.name).join(" & ")}
                             </span>
-                            
-                            
-                            { 
+
+
+                            {
                                 myOwners.length < 2
                                     ? <select defaultValue=""
                                         name="owner"
                                         className="form-control small"
-                                        onChange={() => {}} >
+                                        onChange={() => { }} >
                                         <option value="">
                                             Select {currentAnimal.animalOwners?.length === 1 ? "another" : "an"} owner
                                         </option>
@@ -137,11 +137,16 @@ export const Animal = ({ animal, syncAnimals,
                                 ? <button className="btn btn-warning mt-3 form-control small" onClick={() =>
                                     AnimalOwnerRepository
                                         .removeOwnersAndCaretakers(currentAnimal.id)
-                                        .then(() => {}) // Remove animal
-                                        .then(() => {}) // Get all animals
+                                        .then(() => { }) // Remove animal
+                                        .then(() => { }) // Get all animals
                                 }>Discharge</button>
                                 : ""
                         }
+                        {isEmployee
+                            ? <button id="treatmentBtn"
+                             className="btn btn-warning mt-3 form-control small"
+                             onClick={() =>{}}
+                            >New Treatment</button> : null}
 
                     </details>
                 </div>
