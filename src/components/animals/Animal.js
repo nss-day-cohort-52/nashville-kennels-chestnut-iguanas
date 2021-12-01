@@ -7,7 +7,7 @@ import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import "./AnimalCard.css"
 
-export const Animal = ({ animal, syncAnimals,
+export const Animal = ({ animal, setAnimalOwners, syncAnimals,
     showTreatmentHistory, owners }) => {
     const [detailsOpen, setDetailsOpen] = useState(false)
     const [isEmployee, setAuth] = useState(false)
@@ -35,7 +35,14 @@ export const Animal = ({ animal, syncAnimals,
             .getOwnersByAnimal(currentAnimal.id)
             .then(people => setPeople(people))
     }
-    
+
+    const assignNewOwner = (event) => {
+        return AnimalOwnerRepository
+            .assignOwner(currentAnimal.id, parseInt(event.target.value))
+            .then(syncAnimals)
+            
+    }
+
     useEffect(() => {
         getPeople()
     }, [currentAnimal])
@@ -84,25 +91,25 @@ export const Animal = ({ animal, syncAnimals,
                         <section>
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                            {currentAnimal.animalCaretakers?.map(u=>u.user.name).join(" & ")}
-                            
+                                {currentAnimal.animalCaretakers?.map(u => u.user.name).join(" & ")}
+
                             </span>
 
-                        
+
                             <h6>Owners</h6>
                             <span className="small">
-                            {myOwners.map(u=>u.user.name).join(" & ")}
+                                {animal.animalOwners?.map(u => u.user.name).join(" & ")}
                             </span>
-                            
-                            
-                            { 
-                                myOwners.length < 2
+                            {console.log("owners arrays below")}
+
+                            {
+                                animal.animalOwners?.length < 2
                                     ? <select defaultValue=""
                                         name="owner"
                                         className="form-control small"
-                                        onChange={() => {}} >
+                                        onChange={(event) => { assignNewOwner(event) }} >
                                         <option value="">
-                                            Select {currentAnimal.animalOwners?.length === 1 ? "another" : "an"} owner
+                                            Select {animal.animalOwners?.length === 1 ? "another" : "an"} owner
                                         </option>
                                         {
                                             allOwners.map(o => <option key={o.id} value={o.id}>{o.name}</option>)
@@ -137,8 +144,8 @@ export const Animal = ({ animal, syncAnimals,
                                 ? <button className="btn btn-warning mt-3 form-control small" onClick={() =>
                                     AnimalOwnerRepository
                                         .removeOwnersAndCaretakers(currentAnimal.id)
-                                        .then(() => {}) // Remove animal
-                                        .then(() => {}) // Get all animals
+                                        .then(() => { }) // Remove animal
+                                        .then(() => { }) // Get all animals
                                 }>Discharge</button>
                                 : ""
                         }
