@@ -19,6 +19,7 @@ export const AnimalListComponent = (props) => {
     const [currentAnimal, setCurrentAnimal] = useState({ treatments: [] })
     const { getCurrentUser } = useSimpleAuth()
     const history = useHistory()
+    const [isEmployee, setAuth] = useState(false)
     let { toggleDialog, modalIsOpen } = useModal("#dialog--animal")
 
     const syncAnimals = () => {
@@ -29,6 +30,7 @@ export const AnimalListComponent = (props) => {
         OwnerRepository.getAllCustomers().then(updateOwners)
         AnimalOwnerRepository.getAll().then(setAnimalOwners)
         syncAnimals()
+        setAuth(getCurrentUser().employee)
     }, [])
 
     const showTreatmentHistory = animal => {
@@ -47,6 +49,26 @@ export const AnimalListComponent = (props) => {
 
         return () => window.removeEventListener("keyup", handler)
     }, [toggleDialog, modalIsOpen])
+
+
+
+
+    const custAnimal = () => {
+        const currentUser = getCurrentUser().id
+        let currentAnimal = []
+        for (const animal of animals) {
+            for (const owner of animal.animalOwners) {
+                if (owner.userId === currentUser){
+                    currentAnimal.push(animal)
+                    
+                }
+
+            }
+        }
+        return currentAnimal 
+    }
+
+
 
 
     return (
@@ -69,14 +91,25 @@ export const AnimalListComponent = (props) => {
 
             <ul className="animals">
                 {
-                    animals.map(anml =>
-                        <Animal key={`animal--${anml.id}`} animal={anml}
-                            animalOwners={animalOwners}
-                            owners={owners}
-                            syncAnimals={syncAnimals}
-                            setAnimalOwners={setAnimalOwners}
-                            showTreatmentHistory={showTreatmentHistory}
-                        />)
+                    isEmployee ?
+                        animals.map(anml =>
+                            <Animal key={`animal--${anml.id}`} animal={anml}
+                                animalOwners={animalOwners}
+                                owners={owners}
+                                syncAnimals={syncAnimals}
+                                setAnimalOwners={setAnimalOwners}
+                                showTreatmentHistory={showTreatmentHistory}
+                            />) :
+
+                        custAnimal().map(anml =>
+                            <Animal key={`animal--${anml.id}`} animal={anml}
+                                animalOwners={animalOwners}
+                                owners={owners}
+                                syncAnimals={syncAnimals}
+                                setAnimalOwners={setAnimalOwners}
+                                showTreatmentHistory={showTreatmentHistory}
+                            />) 
+
                 }
             </ul>
         </>
