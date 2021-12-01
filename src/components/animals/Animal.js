@@ -7,7 +7,7 @@ import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import "./AnimalCard.css"
 
-export const Animal = ({ animal, syncAnimals,
+export const Animal = ({ animal, setAnimalOwners, syncAnimals,
     showTreatmentHistory, owners }) => {
     const [detailsOpen, setDetailsOpen] = useState(false)
     const [isEmployee, setAuth] = useState(false)
@@ -34,6 +34,13 @@ export const Animal = ({ animal, syncAnimals,
         return AnimalOwnerRepository
             .getOwnersByAnimal(currentAnimal.id)
             .then(people => setPeople(people))
+    }
+
+    const assignNewOwner = (event) => {
+        return AnimalOwnerRepository
+            .assignOwner(currentAnimal.id, parseInt(event.target.value))
+            .then(syncAnimals)
+            
     }
 
     useEffect(() => {
@@ -91,18 +98,18 @@ export const Animal = ({ animal, syncAnimals,
 
                             <h6>Owners</h6>
                             <span className="small">
-                                {myOwners.map(u => u.user.name).join(" & ")}
+                                {animal.animalOwners?.map(u => u.user.name).join(" & ")}
                             </span>
-
+                            {console.log("owners arrays below")}
 
                             {
-                                myOwners.length < 2
+                                animal.animalOwners?.length < 2
                                     ? <select defaultValue=""
                                         name="owner"
                                         className="form-control small"
-                                        onChange={() => { }} >
+                                        onChange={(event) => { assignNewOwner(event) }} >
                                         <option value="">
-                                            Select {currentAnimal.animalOwners?.length === 1 ? "another" : "an"} owner
+                                            Select {animal.animalOwners?.length === 1 ? "another" : "an"} owner
                                         </option>
                                         {
                                             allOwners.map(o => <option key={o.id} value={o.id}>{o.name}</option>)
