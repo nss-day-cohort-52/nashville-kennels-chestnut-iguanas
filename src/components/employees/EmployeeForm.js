@@ -34,7 +34,7 @@ export default (props) => {
                 email: employee.email
             })
             .then(data => {
-                debugger
+                
                 EmployeeRepository.assignEmployee({
                     userId: data.id,
                     locationId: parseInt(employee.locationId)
