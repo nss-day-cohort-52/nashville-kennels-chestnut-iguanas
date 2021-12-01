@@ -5,6 +5,7 @@ import useResourceResolver from "../../hooks/resource/useResourceResolver";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import person from "./person.png"
 import "./Employee.css"
+import { useHistory } from "react-router-dom"
 
 
 export default ({ employee }) => {
@@ -14,12 +15,16 @@ export default ({ employee }) => {
     const { employeeId } = useParams()
     const { getCurrentUser } = useSimpleAuth()
     const { resolveResource, resource } = useResourceResolver()
+    const [isEmployee, setAuth] = useState(false)
+    const history = useHistory()
 
     useEffect(() => {
         if (employeeId) {
             defineClasses("card employee--single")
         }
+        setAuth(getCurrentUser().employee)
         resolveResource(employee, employeeId, EmployeeRepository.get)
+        
     }, [])
 
     useEffect(() => {
@@ -27,6 +32,8 @@ export default ({ employee }) => {
             markLocation(resource.employeeLocations[0])
         }
     }, [resource])
+
+
 
     return (
         <article className={classes}>
@@ -62,8 +69,12 @@ export default ({ employee }) => {
                         : ""
                 }
 
-                {
-                    <button className="btn--fireEmployee" onClick={() => {}}>Fire</button>
+                { isEmployee? 
+                    <button className="btn--fireEmployee" onClick={() => {
+                        EmployeeRepository.delete(parseInt(employeeId))
+                        EmployeeRepository.delete(parseInt(resource.id))
+                        .then(history.push("/employees"))
+                    }}>Fire</button> : ""
                 }
 
             </section>
