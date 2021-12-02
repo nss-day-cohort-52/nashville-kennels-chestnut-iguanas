@@ -9,36 +9,39 @@ import { useHistory } from "react-router-dom"
 export default () => {
     const [emps, setEmployees] = useState([])
 
-    useEffect(
-        () => {
-            EmployeeRepository.getAll()
-            .then((res)=>{
+    const syncEmployees = () => {
+        EmployeeRepository.getAll()
+            .then((res) => {
                 setEmployees(res)
             })
+    }
+    useEffect(
+        () => {
+            syncEmployees()
         }, []
     )
-const history = useHistory()
+    const history = useHistory()
     return (
         <>
             <div className="employees">
                 {
-                    emps.map(a => <Employee key={a.id} employee={a} />)
+                    emps.map(a => <Employee key={a.id} func={syncEmployees} employee={a} />)
                 }
             </div>
 
 
-            
-            <button type="hire"
-                    onClick={
-                        evt => {
-                            evt.preventDefault()
-                            history.push("/employees/create")
-                            // constructNewEmployee()
-                        }
-                    }
-                    className="btn btn-primary"> New Employee </button>
 
-            
+            <button type="hire"
+                onClick={
+                    evt => {
+                        evt.preventDefault()
+                        history.push("/employees/create")
+                        // constructNewEmployee()
+                    }
+                }
+                className="btn btn-primary"> New Employee </button>
+
+
         </>
     )
 }
