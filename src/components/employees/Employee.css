@@ -10,6 +10,7 @@
 
 .btn--fireEmployee{
     margin: 1em 0 0 0;
+    margin-bottom: 10px;
 }
 
 .icon--person {
@@ -22,4 +23,10 @@
     transition: .4s all ease;
     z-index: 11;
     box-shadow: 5px 15px 20px rgba(72, 62, 23, 0.4)
+}
+
+.btn--reasignAnimal {
+    display: flex;
+    margin-top: 10px;
+    margin: auto;
 }
