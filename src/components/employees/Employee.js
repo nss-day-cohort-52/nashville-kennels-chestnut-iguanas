@@ -58,6 +58,7 @@ export default ({ employee }) => {
                                 return <div key={each.location.id}> {each.location.name}</div>
                             })}
                             </section>
+                            
                         </>
                         : ""
                 }
@@ -65,6 +66,7 @@ export default ({ employee }) => {
                 {
                     <button className="btn--fireEmployee" onClick={() => {}}>Fire</button>
                 }
+                
 
             </section>
 

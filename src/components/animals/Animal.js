@@ -40,7 +40,7 @@ export const Animal = ({ animal, setAnimalOwners, syncAnimals,
         return AnimalOwnerRepository
             .assignOwner(currentAnimal.id, parseInt(event.target.value))
             .then(syncAnimals)
-            
+
     }
 
     useEffect(() => {
@@ -88,6 +88,7 @@ export const Animal = ({ animal, setAnimalOwners, syncAnimals,
                             <meter min="0" max="100" value={Math.random() * 100} low="25" high="75" optimum="100"></meter>
                         </summary>
 
+
                         <section>
                             <h6>Caretaker(s)</h6>
                             <span className="small">
@@ -95,6 +96,21 @@ export const Animal = ({ animal, setAnimalOwners, syncAnimals,
 
                             </span>
 
+                            {
+                                isEmployee
+                                    ? <select defaultValue=""
+                                        name="owner"
+                                        className="form-control small"
+                                        onChange={(event) => { assignNewOwner(event) }} >
+                                        <option value="">
+                                            Select {animal.animalOwners?.length === 1 ? "another" : "an"} owner
+                                        </option>
+                                        {
+                                            allOwners.map(o => <option key={o.id} value={o.id}>{o.name}</option>)
+                                        }
+                                    </select>
+                                    : null
+                            }
 
                             <h6>Owners</h6>
                             <span className="small">
