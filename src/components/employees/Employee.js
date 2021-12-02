@@ -7,8 +7,7 @@ import person from "./person.png"
 import "./Employee.css"
 import { useHistory } from "react-router-dom"
 
-
-export default ({ employee }) => {
+export default ( {employee, func}) => {
     const [animalCount, setCount] = useState(0)
     const [location, markLocation] = useState({ name: "" })
     const [classes, defineClasses] = useState("card employee")
@@ -17,6 +16,7 @@ export default ({ employee }) => {
     const { resolveResource, resource } = useResourceResolver()
     const [isEmployee, setAuth] = useState(false)
     const history = useHistory()
+    
 
     useEffect(() => {
         if (employeeId) {
@@ -24,8 +24,9 @@ export default ({ employee }) => {
         }
         setAuth(getCurrentUser().employee)
         resolveResource(employee, employeeId, EmployeeRepository.get)
-        
+
     }, [])
+
 
     useEffect(() => {
         if (resource?.employeeLocations?.length > 0) {
@@ -33,7 +34,13 @@ export default ({ employee }) => {
         }
     }, [resource])
 
-
+    const deleteEmployee = () => {
+        employeeId ?
+            EmployeeRepository.delete(parseInt(employeeId))
+                .then(history.push("/employees")) :
+            EmployeeRepository.delete(parseInt(resource.id))
+                .then(func)
+    }
 
     return (
         <article className={classes}>
@@ -49,7 +56,7 @@ export default ({ employee }) => {
                                     state: { employee: resource }
                                 }}>
                                 {resource.name}
-                                
+
                             </Link>
 
                     }
@@ -58,22 +65,20 @@ export default ({ employee }) => {
                     employeeId
                         ? <>
                             <section>
-                            Caring for {resource.animals?.length || 0} animals
+                                Caring for {resource.animals?.length || 0} animals
                             </section>
                             <section>
-                            Working at {resource.locations?.map((each)=>{
-                                return <div key={each.location.id}> {each.location.name}</div>
-                            })}
+                                Working at {resource.locations?.map((each) => {
+                                    return <div key={each.location.id}> {each.location.name}</div>
+                                })}
                             </section>
                         </>
                         : ""
                 }
 
-                { isEmployee? 
+                {isEmployee ?
                     <button className="btn--fireEmployee" onClick={() => {
-                        EmployeeRepository.delete(parseInt(employeeId))
-                        EmployeeRepository.delete(parseInt(resource.id))
-                        .then(history.push("/employees"))
+                        deleteEmployee()
                     }}>Fire</button> : ""
                 }
 
