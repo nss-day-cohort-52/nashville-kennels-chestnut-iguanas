@@ -72,6 +72,7 @@ export default ( {employee, func}) => {
                                     return <div key={each.location.id}> {each.location.name}</div>
                                 })}
                             </section>
+                            
                         </>
                         : ""
                 }
@@ -81,6 +82,7 @@ export default ( {employee, func}) => {
                         deleteEmployee()
                     }}>Fire</button> : ""
                 }
+                
 
             </section>
 
