@@ -5,10 +5,11 @@ import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository";
 import OwnerRepository from "../../repositories/OwnerRepository";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import useResourceResolver from "../../hooks/resource/useResourceResolver";
+import {AddTreatment} from "./AnimalTreatmentForm";
 import "./AnimalCard.css"
 import EmployeeRepository from "../../repositories/EmployeeRepository";
 
-export const Animal = ({ animal, setAnimalOwners, syncAnimals,
+export const Animal = ({ animal, syncAnimals,
     showTreatmentHistory, owners }) => {
     const [detailsOpen, setDetailsOpen] = useState(false)
     const [isEmployee, setAuth] = useState(false)
@@ -225,9 +226,20 @@ export const Animal = ({ animal, setAnimalOwners, syncAnimals,
                                     : ""
                             }
 
-                        </details>
-                    </div>
-                </li>
-            </>
-        )
-    }
+                        
+
+
+                        {
+                        isEmployee
+                            ? <button id="treatmentBtn"
+                             className="btn btn-warning mt-3 form-control small"
+                             onClick={() => {history.push(`/animals/${currentAnimal.id}/newTreatment`)}}
+                            >New Treatment</button> : null
+                            }
+
+                    </details>
+                </div>
+            </li>
+        </>
+    )
+}
