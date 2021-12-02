@@ -5,9 +5,10 @@ import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository";
 import OwnerRepository from "../../repositories/OwnerRepository";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import useResourceResolver from "../../hooks/resource/useResourceResolver";
+import {AddTreatment} from "./AnimalTreatmentForm";
 import "./AnimalCard.css"
 
-export const Animal = ({ animal, setAnimalOwners, syncAnimals,
+export const Animal = ({ animal, syncAnimals,
     showTreatmentHistory, owners }) => {
     const [detailsOpen, setDetailsOpen] = useState(false)
     const [isEmployee, setAuth] = useState(false)
@@ -91,7 +92,7 @@ export const Animal = ({ animal, setAnimalOwners, syncAnimals,
                         <section>
                             <h6>Caretaker(s)</h6>
                             <span className="small">
-                                {currentAnimal.animalCaretakers?.map(u => u.user.name).join(" & ")}
+                                {animal.animalCaretakers?.map(u => u.user.name).join(" & ")}
 
                             </span>
 
@@ -100,7 +101,6 @@ export const Animal = ({ animal, setAnimalOwners, syncAnimals,
                             <span className="small">
                                 {animal.animalOwners?.map(u => u.user.name).join(" & ")}
                             </span>
-                            {console.log("owners arrays below")}
 
                             {
                                 animal.animalOwners?.length < 2
@@ -149,11 +149,13 @@ export const Animal = ({ animal, setAnimalOwners, syncAnimals,
                                 }>Discharge</button>
                                 : ""
                         }
-                        {isEmployee
+                        {
+                        isEmployee
                             ? <button id="treatmentBtn"
                              className="btn btn-warning mt-3 form-control small"
-                             onClick={() =>{}}
-                            >New Treatment</button> : null}
+                             onClick={() => {history.push(`/animals/${currentAnimal.id}/newTreatment`)}}
+                            >New Treatment</button> : null
+                            }
 
                     </details>
                 </div>
