@@ -99,6 +99,7 @@ export const AnimalListComponent = (props) => {
                                 syncAnimals={syncAnimals}
                                 setAnimalOwners={setAnimalOwners}
                                 showTreatmentHistory={showTreatmentHistory}
+                                
                             />) :
 
                         custAnimal().map(anml =>
@@ -108,6 +109,7 @@ export const AnimalListComponent = (props) => {
                                 syncAnimals={syncAnimals}
                                 setAnimalOwners={setAnimalOwners}
                                 showTreatmentHistory={showTreatmentHistory}
+                                
                             />) 
 
                 }
