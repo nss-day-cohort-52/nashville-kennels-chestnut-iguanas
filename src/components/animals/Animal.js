@@ -5,7 +5,7 @@ import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository";
 import OwnerRepository from "../../repositories/OwnerRepository";
 import useSimpleAuth from "../../hooks/ui/useSimpleAuth";
 import useResourceResolver from "../../hooks/resource/useResourceResolver";
-import {AddTreatment} from "./AnimalTreatmentForm";
+import { AddTreatment } from "./AnimalTreatmentForm";
 import "./AnimalCard.css"
 import EmployeeRepository from "../../repositories/EmployeeRepository";
 
@@ -96,146 +96,143 @@ export const Animal = ({ animal, syncAnimals,
             }
         }
 
-            return newAnimalCareTaker
-        
+        return newAnimalCareTaker
+
     }
 
 
-        useEffect(() => {
-            getPeople()
-        }, [currentAnimal])
+    useEffect(() => {
+        getPeople()
+    }, [currentAnimal])
 
-        useEffect(() => {
-            if (animalId) {
-                defineClasses("card animal--single")
-                setDetailsOpen(true)
+    useEffect(() => {
+        if (animalId) {
+            defineClasses("card animal--single")
+            setDetailsOpen(true)
 
-                AnimalOwnerRepository.getOwnersByAnimal(animalId).then(d => setPeople(d))
-                    .then(() => {
-                        OwnerRepository.getAllCustomers().then(registerOwners)
-                    })
-            }
-        }, [animalId])
+            AnimalOwnerRepository.getOwnersByAnimal(animalId).then(d => setPeople(d))
+                .then(() => {
+                    OwnerRepository.getAllCustomers().then(registerOwners)
+                })
+        }
+    }, [animalId])
 
-        return (
-            <>
-                <li className={classes}>
-                    <div className="card-body">
-                        <div className="animal__header">
-                            <h5 className="card-title">
-                                <button className="link--card btn btn-link"
-                                    style={{
-                                        cursor: "pointer",
-                                        "textDecoration": "underline",
-                                        "color": "rgb(94, 78, 196)"
-                                    }}
-                                    onClick={() => {
-                                        if (isEmployee) {
-                                            showTreatmentHistory(currentAnimal)
-                                        }
-                                        else {
-                                            history.push(`/animals/${currentAnimal.id}`)
-                                        }
-                                    }}> {currentAnimal.name} </button>
-                            </h5>
-                            <span className="card-text small">{currentAnimal.breed}</span>
-                        </div>
+    return (
+        <>
+            <li className={classes}>
+                <div className="card-body">
+                    <div className="animal__header">
+                        <h5 className="card-title">
+                            <button className="link--card btn btn-link"
+                                style={{
+                                    cursor: "pointer",
+                                    "textDecoration": "underline",
+                                    "color": "rgb(94, 78, 196)"
+                                }}
+                                onClick={() => {
+                                        showTreatmentHistory(currentAnimal)
+                                }}> {currentAnimal.name} </button>
+                        </h5>
+                        <span className="card-text small">{currentAnimal.breed}</span>
+                    </div>
 
-                        <details open={detailsOpen}>
-                            <summary className="smaller">
-                                <meter min="0" max="100" value={Math.random() * 100} low="25" high="75" optimum="100"></meter>
-                            </summary>
+                    <details open={detailsOpen}>
+                        <summary className="smaller">
+                            <meter min="0" max="100" value={Math.random() * 100} low="25" high="75" optimum="100"></meter>
+                        </summary>
 
 
-                            <section>
-                                <h6>Caretaker(s)</h6>
-                                <span className="small">
+                        <section>
+                            <h6>Caretaker(s)</h6>
+                            <span className="small">
 
-                                    {careTakerJsx().map(u => u.user.name).join(" & ")}
-
-
-                                </span>
-
-                                {
-                                    isEmployee
-                                        ? <select defaultValue=""
-                                            name="caretaker"
-                                            className="form-control small"
-                                            onChange={(event) => { assignCareTaker(event) }} >
-                                            <option value="">
-                                                Select {animal.animalCaretakers?.length >= 1 ? "another" : "a"} caretaker
-                                            </option>
-                                            {
-                                                filterEmployees().map(o => <option key={o.id} value={o.id}>{o.name}</option>)
-                                            }
-                                        </select>
-                                        : null
-                                }
-
-                                <h6>Owners</h6>
-                                <span className="small">
-                                    {animal.animalOwners?.map(u => u.user.name).join(" & ")}
-                                </span>
-                                {console.log("owners arrays below")}
-
-                                {
-                                    animal.animalOwners?.length < 2
-                                        ? <select defaultValue=""
-                                            name="owner"
-                                            className="form-control small"
-                                            onChange={(event) => { assignNewOwner(event) }} >
-                                            <option value="">
-                                                Select {animal.animalOwners?.length === 1 ? "another" : "an"} owner
-                                            </option>
-                                            {
-                                                allOwners.map(o => <option key={o.id} value={o.id}>{o.name}</option>)
-                                            }
-                                        </select>
-                                        : null
-                                }
+                                {careTakerJsx().map(u => u.user.name).join(" & ")}
 
 
-                                {
-                                    detailsOpen && "treatments" in currentAnimal
-                                        ? <div className="small">
-                                            <h6>Treatment History</h6>
-                                            {
-                                                currentAnimal.treatments.map(t => (
-                                                    <div key={t.id}>
-                                                        <p style={{ fontWeight: "bolder", color: "grey" }}>
-                                                            {new Date(t.timestamp).toLocaleString("en-US")}
-                                                        </p>
-                                                        <p>{t.description}</p>
-                                                    </div>
-                                                ))
-                                            }
-                                        </div>
-                                        : ""
-                                }
-
-                            </section>
+                            </span>
 
                             {
                                 isEmployee
-                                    ? <button className="btn btn-warning mt-3 form-control small" onClick={() =>
-                                        AnimalOwnerRepository
-                                            .removeOwnersAndCaretakers(currentAnimal.id)
-                                            .then(() => { }) // Remove animal
-                                            .then(() => { }) // Get all animals
-                                    }>Discharge</button>
+                                    ? <select defaultValue=""
+                                        name="caretaker"
+                                        className="form-control small"
+                                        onChange={(event) => { assignCareTaker(event) }} >
+                                        <option value="">
+                                            Select {animal.animalCaretakers?.length >= 1 ? "another" : "a"} caretaker
+                                        </option>
+                                        {
+                                            filterEmployees().map(o => <option key={o.id} value={o.id}>{o.name}</option>)
+                                        }
+                                    </select>
+                                    : null
+                            }
+
+                            <h6>Owners</h6>
+                            <span className="small">
+                                {animal.animalOwners?.map(u => u.user.name).join(" & ")}
+                            </span>
+                            {console.log("owners arrays below")}
+
+                            {
+                                animal.animalOwners?.length < 2
+                                    ? <select defaultValue=""
+                                        name="owner"
+                                        className="form-control small"
+                                        onChange={(event) => { assignNewOwner(event) }} >
+                                        <option value="">
+                                            Select {animal.animalOwners?.length === 1 ? "another" : "an"} owner
+                                        </option>
+                                        {
+                                            allOwners.map(o => <option key={o.id} value={o.id}>{o.name}</option>)
+                                        }
+                                    </select>
+                                    : null
+                            }
+
+
+                            {
+                                detailsOpen && "treatments" in currentAnimal
+                                    ? <div className="small">
+                                        <h6>Treatment History</h6>
+                                        {
+                                            currentAnimal.treatments.map(t => (
+                                                <div key={t.id}>
+                                                    <p style={{ fontWeight: "bolder", color: "grey" }}>
+                                                        {new Date(t.timestamp).toLocaleString("en-US")}
+                                                    </p>
+                                                    <p>{t.description}</p>
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
                                     : ""
                             }
 
-                        
+                        </section>
+
+                        {
+                            isEmployee
+                                ? <button className="btn btn-warning mt-3 form-control small" onClick={() =>
+                                    AnimalOwnerRepository
+                                        .removeOwnersAndCaretakers(currentAnimal.id)
+                                        .then(() => {
+                                            AnimalRepository.delete(currentAnimal.id)
+                                        })
+                                        .then(syncAnimals) // Get all animals
+                                }>Discharge</button>
+                                : ""
+                        }
+
+
 
 
                         {
-                        isEmployee
-                            ? <button id="treatmentBtn"
-                             className="btn btn-warning mt-3 form-control small"
-                             onClick={() => {history.push(`/animals/${currentAnimal.id}/newTreatment`)}}
-                            >New Treatment</button> : null
-                            }
+                            isEmployee
+                                ? <button id="treatmentBtn"
+                                    className="btn btn-warning mt-3 form-control small"
+                                    onClick={() => { history.push(`/animals/${currentAnimal.id}/newTreatment`) }}
+                                >New Treatment</button> : null
+                        }
 
                     </details>
                 </div>

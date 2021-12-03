@@ -20,6 +20,7 @@ const useSimpleAuth = () => {
                 const baseUserObject = JSON.stringify(response)
                 let encoded = Buffer.from(baseUserObject).toString("base64")
                 localStorage.setItem("kennel_token", encoded)
+                
             }
         })
     }
