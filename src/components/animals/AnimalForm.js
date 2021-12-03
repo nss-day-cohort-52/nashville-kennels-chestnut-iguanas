@@ -2,6 +2,9 @@ import React, { useState, useContext, useEffect } from "react"
 import "./AnimalForm.css"
 import AnimalRepository from "../../repositories/AnimalRepository";
 import EmployeeRepository from "../../repositories/EmployeeRepository";
+import { useHistory } from "react-router-dom"
+import AnimalOwnerRepository from "../../repositories/AnimalOwnerRepository";
+import useSimpleAuth from "../../hooks/ui/useSimpleAuth"
 
 export default (props) => {
     const [animalName, setName] = useState("")
@@ -11,13 +14,18 @@ export default (props) => {
     const [employeeId, setEmployeeId] = useState(0)
     const [saveEnabled, setEnabled] = useState(false)
     const [animallocation, setlocation] = useState("")
-
+    const { getCurrentUser } = useSimpleAuth()
+    const [userId, setuserId] = useState({})
+    const history = useHistory()
+    
     useEffect(() => {
         EmployeeRepository.getAll()
             .then((res) => {
                 setEmployees(res)
             })
+        setuserId(getCurrentUser)
     }, [])
+
 
 
     const constructNewAnimal = evt => {
@@ -31,15 +39,17 @@ export default (props) => {
             const animal = {
                 name: animalName,
                 breed: breed,
-                employeeId: eId,
                 locationId: parseInt(animallocation)
             }
-
             AnimalRepository.addAnimal(animal)
-                .then(() => setEnabled(true))
-                .then(() => props.history.push("/animals"))
+                .then((response)=>{
+                    return AnimalOwnerRepository.assignOwner(response.id, userId.id)
+                })
+                .then(() => history.push("/animals"))
+
         }
     }
+
 
     const chosenemployee = () => {
         const employeechosen = employees.filter(e => {
@@ -106,12 +116,12 @@ export default (props) => {
                         name="employee"
                         id="employeeId"
                         className="form-control"
-                        onChange={e => setlocation(e.target.id)}
+                        onChange={e => setlocation(e.target.value)}
                     >
                         <option value="">Select a location</option>
                         {
                             chosenemployee().map((locate) => {
-                                return <option key={locate.id} id={locate.id} value={locate.locationId}>{locate.locationId === 1? "Nashville North": "Nashville South"} </option>
+                                return <option key={locate.id} id={locate.id} value={locate.locationId}>{locate.locationId === 1 ? "Nashville North" : "Nashville South"} </option>
                             })
                         }
                     </select>
